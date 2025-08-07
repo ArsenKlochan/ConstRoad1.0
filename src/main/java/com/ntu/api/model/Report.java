@@ -257,17 +257,9 @@ public class Report {
     private void write(File directory, RoadConstraction roadConstraction, boolean bool){
         try {
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(new Date());
-            File fileForReport = new File(directory, "report" + timestamp + ".dat");
-            File fileExcReport = new File(directory, "excellentReport" + timestamp + ".dat");
-            System.out.println("in write " + directory);
-//            System.out.println("in write " + fileForReport);
-//            System.out.println("in write " + fileExcReport);
-//            File fileForReport = new File(directory, "report"+ Calendar.getInstance().getTime() +".txt");
-//            File fileExcReport = new File(directory, "excellentReport"+ Calendar.getInstance().getTime() + ".txt");
-            System.out.println(true+"3");
-            bool=true;
+            File fileForReport = new File(directory, "report" + timestamp + ".txt");
+            File fileExcReport = new File(directory, "excellentReport" + timestamp + ".txt");
             if(bool){
-                excellentBool = true;
                 if (excellentBool) {
                     excellentResultWriter = new FileWriter(fileExcReport, true);
                     print(excellentResultWriter, roadConstraction);
@@ -275,8 +267,6 @@ public class Report {
                     if(!directoryForRoadConstr.exists()) {
                         directoryForRoadConstr.mkdirs();
                     }
-//                    String dirName = Calendar.getInstance().getTime().toString();
-//                    File dir = new File(directoryForRoadConstr,dirName);
                     File dir = new File(directoryForRoadConstr, timestamp);
                     dir.mkdirs();
 
@@ -289,12 +279,10 @@ public class Report {
                     }
 
                     File fileForWrite = new File(dir, fileName.toString() + ".txt");
-                    System.out.println(true + "2");
                     try (FileOutputStream fos = new FileOutputStream(fileForWrite);
                          ObjectOutputStream oos = new ObjectOutputStream(fos)) {
                         oos.writeObject(RoadConstractionModel.getRoadConstraction());
                         oos.flush();
-                        System.out.println(true);
                     } catch (FileNotFoundException e) {
                         System.out.println(e);
                         e.printStackTrace();
@@ -339,7 +327,6 @@ public class Report {
             fileWriter.write(roadCost);
             fileWriter.write("\n\n");
             fileWriter.flush();
-            System.out.println("in write " + fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();

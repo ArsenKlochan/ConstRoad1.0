@@ -14,6 +14,8 @@ import org.apache.commons.math3.special.Erf;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class RoadConstractionModel {
     /* Клас, який описує модель конструкції дорожнього одягу для розрахунку характеристик його конструкції та надійності
@@ -514,9 +516,9 @@ public class RoadConstractionModel {
             ArrayList<Double> arrayThick = new ArrayList<>();
             Double start = layer.getMinThickness();
             Double finish = layer.getMaxThickness();
-            while (start<=finish){
-                arrayThick.add(start);
-                start=start+1;
+            while (finish>=start){
+                arrayThick.add(finish);
+                finish=finish-1;
             }
             layersThinkArray.add(arrayThick);
         }
@@ -524,35 +526,50 @@ public class RoadConstractionModel {
     }
 
 //     метод визначення списку можливих комбінацій товщин шарів дорожнього одягу для перебору варіантів
-    public static ArrayList<ArrayList<Double>> layerThinckVariation(){
-        ArrayList<ArrayList<Double>> input = layersThincknessArray();
-        ArrayList<ArrayList<Double>> result = new ArrayList<>();
-        for(ArrayList<Double> in:input){
-            if(result.size()==0){
-                for(Double el: in) {
-                    ArrayList<Double> temp = new ArrayList<>();
-                    temp.add(el);
-                    result.add(temp);
-                }
+public static Iterable<ArrayList<Double>> layerThinckVariation() {
+    ArrayList<ArrayList<Double>> input = layersThincknessArray();
+    return () -> new Iterator<ArrayList<Double>>() {
+        private final int[] indices = new int[input.size()];
+        private boolean hasNext = !input.isEmpty();
+
+        @Override
+        public boolean hasNext() {
+            return hasNext;
+        }
+
+        @Override
+        public ArrayList<Double> next() {
+            if (!hasNext) {
+                throw new NoSuchElementException();
             }
-            else{
-                ArrayList<ArrayList<Double>> newResult = new ArrayList<>();
-                for(ArrayList<Double> elements: result){
-                    for(Double koeficients: in){
-                        ArrayList<Double> temp = base(elements);
-                        temp.add(koeficients);
-                        newResult.add(temp);
+            ArrayList<Double> combination = new ArrayList<>();
+            for (int i = 0; i < input.size(); i++) {
+                combination.add(input.get(i).get(indices[i]));
+            }
+            for (int i = input.size() - 1; i >= 0; i--) {
+                indices[i]++;
+                if (indices[i] < input.get(i).size()) {
+                    break;
+                } else {
+                    indices[i] = 0;
+                    if (i == 0) {
+                        hasNext = false;
                     }
                 }
-                result = new ArrayList<>();
-                for(ArrayList<Double> results:newResult){
-                    result.add(results);
-                }
             }
-            System.out.println(result.size());
+            return combination;
         }
-        System.out.println(result);
-        return result;
+    };
+
+}
+
+    public static long layerThinckVariationCount(){
+        ArrayList<ArrayList<Double>> input = layersThincknessArray();
+        long total = 1;
+        for(ArrayList<Double> options: input){
+            total *= options.size();
+        }
+        return total;
     }
 
     //    метод формування базового елемента для методу визначення можливих комбінацій товщин шарів дорожнього одягу
