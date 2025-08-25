@@ -299,6 +299,7 @@ public class Report {
                 }
             }
         } catch (IOException e) {
+            e.fillInStackTrace();
             e.printStackTrace();
         }
     }

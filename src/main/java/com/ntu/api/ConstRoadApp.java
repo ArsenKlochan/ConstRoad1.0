@@ -1,6 +1,5 @@
 package com.ntu.api;
 
-import com.ntu.api.domain.Lists;
 import com.ntu.api.domain.listCreate.Main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +10,8 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 public class ConstRoadApp extends Application {
+
+    public static void main(String[] args) { launch(args); }
 
     @Override
     public void start(Stage primaryStage) throws Exception {

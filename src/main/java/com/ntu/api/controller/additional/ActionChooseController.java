@@ -14,7 +14,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -70,6 +73,7 @@ public class ActionChooseController {
     }
 
     @FXML private void enumerationOnClick(){
+        System.out.println(RoadConstractionModel.getDirectory().getParentFile());
         Alert progressAlert = new Alert(Alert.AlertType.INFORMATION);
         progressAlert.setTitle("Перебір варіантів");
         progressAlert.setHeaderText(null);
@@ -137,7 +141,13 @@ public class ActionChooseController {
 
         enumerationTask.setOnSucceeded(event -> {
             progressAlert.close();
-            Message.errorCatch(actionChoosePane,"Результати", "Перебір варіантів конструкції дорожнього покриття успішно завершена.\nРезультати представлені у відповідному файлі звіту (.../report/...)");
+            Message.errorCatch(actionChoosePane,"Результати", "Перебір варіантів конструкції дорожнього покриття успішно завершена.\nРезультати представлені у відповідному файлі звіту (" + RoadConstractionModel.getDirectory().getParentFile() + "/reports)");
+            Path dir = Paths.get(RoadConstractionModel.getDirectory().getParentFile() + "/reports");
+            try {
+                Desktop.getDesktop().open(dir.toFile());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         enumerationTask.setOnFailed(event -> progressAlert.close());

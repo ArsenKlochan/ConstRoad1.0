@@ -1,5 +1,7 @@
 package com.ntu.api.controller.main;
 
+import com.ntu.api.AppFiles;
+import com.ntu.api.ConstRoadApp;
 import com.ntu.api.controller.additional.AboutController;
 import com.ntu.api.domain.Lists;
 import com.ntu.api.domain.Message;
@@ -16,6 +18,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class MainController {
@@ -30,19 +35,14 @@ public class MainController {
         this.roadConstraction = roadConstraction;
     }
 
-    @FXML public void initialize(){
-        FileReader fileReader = null;
-        try {
-            String root;
-            fileReader = new FileReader("src/main/root");
-            Scanner scanner = new Scanner(fileReader);
-            root = scanner.nextLine();
-            Lists.setRoot(root);
-            Main.start();
+    @FXML public void initialize() throws IOException {
+        Path rootFile = AppFiles.ensureRootFile(ConstRoadApp.class);
+
+// Тепер читаємо значення:
+        String root = Files.readString(rootFile, StandardCharsets.UTF_8).strip();
+        Lists.setRoot(root);
+        Main.start();
 //            Lists.listReader();
-        } catch (FileNotFoundException e) {
-           Message.errorCatch(main,"Помилка корневої папки","Перевірте правильність введення адреси кореневої папки в файлі root");
-        }
     }
     @FXML public void helpOnClick(){
         helpAboutOpen("Help", "Help Error", false);

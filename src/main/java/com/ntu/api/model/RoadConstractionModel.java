@@ -10,7 +10,6 @@ import com.ntu.api.domain.listCreate.Objects.Layers.Layer;
 import com.ntu.api.domain.listCreate.Objects.Layers.RoadLayers;
 import com.ntu.api.domain.listCreate.Objects.Layers.Sand;
 import javafx.scene.layout.AnchorPane;
-import org.apache.commons.math3.special.Erf;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -333,7 +332,7 @@ public class RoadConstractionModel {
     private static Double reliabilityCalculation(Double koeficient, Double koeficientC, Double koeficientCr){
         Double reliabilityParameter =(koeficient-1.0)/
                 Math.sqrt(Math.pow(koeficientCr,2)*Math.pow(koeficient,2)+Math.pow(koeficientC,2));
-        Double reliabilityKoeficient = 0.5*Erf.erf(reliabilityParameter/Math.sqrt(2.0))+0.5;
+        Double reliabilityKoeficient = 0.5* Erf.erf(reliabilityParameter/Math.sqrt(2.0))+0.5;
         return reliabilityKoeficient;
     }
 
@@ -633,4 +632,6 @@ public static Iterable<ArrayList<Double>> layerThinckVariation() {
         }
         return temp;
     }
+
+
 }
